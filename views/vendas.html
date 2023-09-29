@@ -1,0 +1,224 @@
+
+<div class="container-vendas">  
+    <div class="lista-vendas">
+      <div class="top-lista-vendas">
+        <div class="top-vendas-txt">
+          <h3>{$msg}</h3>
+          {if="$valorPedidos!=''"}<p>Total: R$ {function="formataValor($valorPedidos)"} - Lucro: R$ {function="formataValor($lucroData)"} ({$percLucroData}%)</p>{/if}
+        </div>
+        <div class="form-vendas">
+          <i class="las la-search"></i> &nbsp;&nbsp; <a title="Pesquisar vendas por data" href="#pesquisa-data">Por Dia</a> | <a title="Pesquisar vendas por cliente" href="#pesquisa-cliente">Por Cliente</a> | <a title="Pesquisar vendas por número do Pedido" href="#pesquisa-pedido">Por Pedido</a> | <a title="Pesquisar vendas que incluam determinado produto" href="#pesquisa-produto">Por Produto</a>
+        </div>
+      </div>
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Pedido</th>
+                <th>Cliente</th>
+                <th>Data e Hora</th>
+                <th>Valor R$</th>                
+                <th>Detalhar</th>                
+              </tr>
+            </thead>
+            {if="$pedidos!=0"}            
+            <tbody>              
+              {loop="$pedidos"}               
+              <tr>
+                <td>{$counter +1}</td>
+                <td>{$value.num_pedido}</td>
+                <td>{$value.nome_cliente}</td>
+                <td>{function="formataDateTime($value.data_fim)"}</td>
+                <td>{function="formataValor($value.pgto_total)"}</td>                
+                <td><a href="pedido/{$value.num_pedido}"><i class="las la-file-invoice-dollar"></i></a></td>
+              </tr>
+              {/loop}                            
+            </tbody>
+            {else}
+              <tbody>
+                <tr>
+                  <td colspan="6">
+                    <span class="msg_pedidos">Nenhum pedido localizado.</span>     
+                  </td>
+                </tr>
+              </tbody>         
+            {/if}                        
+          </table>          
+    </div>
+
+    <div class="resumo-vendas">
+        
+        <div class="vendas-resumo">
+	
+          <div class="vendas-dia">
+      
+            <div class="vendas-dia-icon">
+              <i class="las la-money-bill"></i>
+            </div>
+      
+            <div class="vendas-dia-texto">
+              <div class="vendas-dia-title">
+                Vendas de Hoje
+              </div>
+              <div class="vendas-dia-vlr">
+                R$ {function="formataValor($vendasDoDia)"}
+              </div>
+              <div class="lucro-dia">
+                LUCRO DO DIA: &nbsp;<strong>R$ {function="formataValor($lucroDoDia)"}</strong>&nbsp;&nbsp; ({$percLucroDoDia}%)
+              </div>
+            </div>
+      
+          </div>
+      
+          <div class="vendas-mes">
+      
+            <div class="vendas-mes-icon">
+              <i class="las la-calendar-alt"></i>
+            </div>
+      
+            <div class="vendas-mes-texto">
+              <div class="vendas-mes-title">
+                Vendas no Mes
+              </div>
+              <div class="vendas-mes-vlr">
+                R$ {function="formataValor($vendasDoMes)"}
+              </div>
+              <div class="lucro-mes">
+                LUCRO DO MÊS: &nbsp;<strong>R$ {function="formataValor($lucroDoMes)"}</strong>&nbsp;&nbsp; ({$percLucroDoMes}%)
+              </div>
+            </div>
+      
+          </div>
+      
+          <div class="vendas-top5">
+            <h2><i style="color:rgb(236, 172, 9);" class="las la-star"></i><i style="color:rgb(236, 172, 9);" class="las la-star"></i><i style="color:rgb(236, 172, 9);" class="las la-star"></i><i style="color:rgb(236, 172, 9);" class="las la-star"></i><i style="color:rgb(236, 172, 9);" class="las la-star"></i> Top 5 Produtos</h2>
+      
+            <div class="top5-box">
+              
+              {loop="$top5"}
+              {$barra =  $value.valor / $valorTop5 * 100}
+              {$width = $barra * 3}
+              <div class="top5-graph">
+                <div class="top5-barra" style="width: {function="arredondar($width)"}px;">
+                  	{$value.quantidade}
+                </div>
+                <span>R$ {function="formataValor($value.valor)"}</span>
+              </div>				
+              <div class="top-5-produto">
+                {$value.produto}
+              </div>
+             {/loop}
+      
+              			
+            </div>
+          </div>
+      
+        </div>
+    </div>
+
+</div>
+
+
+<!-- MODAL Pesquisa por Dia -->
+<div id="pesquisa-data" class="modal-pequeno">
+    
+  <div class="modal-pequeno_content">
+      
+      <div class="modal_top">
+          <h2>PESQUISAR POR DIA</h2><span><a href="#" class="modal_close">&times;</a></span>
+      </div>     
+      <div class="desconto-opcoes">
+        <div class="opcao">
+          Informe o Dia
+        </div>
+        <div class="valor">          
+          <form action="http://192.168.0.118/adegamodelo/pesquisar" method="get">
+            <input type="date" name="data">           
+        </div>        
+      </div>      
+  </div> 
+  <div class="modal_footer">
+    <button class="pesquisar-btn-azul">Pesquisar</button>
+  </div>
+  </form>
+
+</div>
+
+<!-- MODAL Pesquisa por Cliente  -->
+<div id="pesquisa-cliente" class="modal-pequeno">
+    
+  <div class="modal-pequeno_content">
+      
+      <div class="modal_top">
+          <h2>PESQUISAR POR CLIENTE</h2><span><a href="#" class="modal_close">&times;</a></span>
+      </div>     
+      <div class="desconto-opcoes">
+        <div class="opcao">
+          Informe o Nome do Cliente
+        </div>
+        <div class="valor">          
+          <form action="http://192.168.0.118/adegamodelo/pesquisar" method="get">
+            <input type="text" name="cliente">           
+        </div>        
+      </div>      
+  </div> 
+  <div class="modal_footer">
+    <button class="pesquisar-btn-azul">Pesquisar</button>
+  </div>
+  </form>
+
+</div>
+
+<!-- MODAL Pesquisa por Pedido  -->
+<div id="pesquisa-pedido" class="modal-pequeno">
+    
+  <div class="modal-pequeno_content">
+      
+      <div class="modal_top">
+          <h2>PESQUISAR POR Nº DO PEDIDO</h2><span><a href="#" class="modal_close">&times;</a></span>
+      </div>     
+      <div class="desconto-opcoes">
+        <div class="opcao">
+          Informe o Número do Pedido
+        </div>
+        <div class="valor">          
+          <form action="http://192.168.0.118/adegamodelo/pesquisar" method="get">
+            <input type="text" name="pedido">           
+        </div>        
+      </div>      
+  </div> 
+  <div class="modal_footer">
+    <button class="pesquisar-btn-azul">Pesquisar</button>
+  </div>
+  </form>
+
+</div>
+
+<!-- MODAL Pesquisa por Produto  -->
+<div id="pesquisa-produto" class="modal-pequeno">
+    
+  <div class="modal-pequeno_content">
+      
+      <div class="modal_top">
+          <h2>PESQUISAR POR PRODUTO</h2><span><a href="#" class="modal_close">&times;</a></span>
+      </div>     
+      <div class="desconto-opcoes">        
+        <div class="valor">          
+          <form action="http://192.168.0.118/adegamodelo/pesquisar" method="get">
+            <label for="produto">Escolha um Produto:</label>
+            <select name="produto" id="produto">
+              {loop="$produtos"}
+              <option value="{$value.id}">{$value.nome}</option>
+              {/loop}              
+            </select>          
+        </div>        
+      </div>      
+  </div> 
+  <div class="modal_footer">
+    <button class="pesquisar-btn-azul">Pesquisar</button>
+  </div>
+  </form>
+
+</div>
+
+<a class="float-btn" href="https://192.168.0.118/adegamodelo/vendas"><i class="las la-dollar-sign"></i></a>

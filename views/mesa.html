@@ -1,0 +1,652 @@
+<div class="pedido">
+    {loop="$mesa"}
+    {$pedidoID = $value.num_pedido}
+    {$mesaID = $value.id}
+    {$clienteID = $value.clienteID}
+    {$nomeCliente = $value.cliente}
+    <div class="comanda">
+        <div class="topo-comanda">
+                <span class="mesa_num">MESA {$value.id}</span>
+                <span class="mesa_cliente"><a href="#modal-cliente"><i class="las la-user"></i>{$value.cliente}</a></span>
+            </div>
+        <div class="scrollbox">            
+            <div class="scrollbox-inner">                
+                <div class="corpo-comanda">
+                    {if="$value.num_pedido!=0"} <span class="num_pedido"><a href="print/{$value.num_pedido}">PEDIDO Nº&nbsp;&nbsp;<b>{$value.num_pedido}&nbsp;&nbsp;<i class="las la-print"></i></b></a></span>{/if}
+                    <div class="venda">
+                        {loop="$pedidoData"}
+                        {if="$value.quantidade >=1"}
+                        <div class="venda_produto">
+                            {$value.produto} 
+                            <form action="http://192.168.0.118/adegamodelo/remover_produto" method="get">
+                              <input type="hidden" name="mesa" value="{$mesaID}">
+                              <input type="hidden" name="pedido" value="{$pedidoID}">
+                              <input type="hidden" name="produto" value="{$value.produtoID}">                              
+                              <input type="hidden" name="clienteID" value="{$clienteID}">
+                              <button class="remover-produto"><i class="las la-times-circle"></i></button>
+                            </form>
+                        </div>
+                        <div class="venda_disc">
+                            <div class="venda_quant">
+                                {$value.quantidade} x R$ {function="formataValor($value.valor_unit)"}
+                            </div>
+                            <div class="venda_valor">
+                                <b>R$ {function="formataValor($value.quantidade * $value.valor_unit)"}</b>
+                            </div>                    
+                        </div>
+                        {/if}
+                        {/loop}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {if="$value.num_pedido!=0"}
+        <div class="rodape-comanda">
+            
+            <div class="valor-comanda">
+                <span>VALOR DA MESA</span> <span>R$ {function="formataValor($subtotalPedido)"}</span>
+            </div>
+            <div class="valor-comanda">
+                <span>(-) <a href="#modal-descontos">DESCONTOS</a></span> <span>R$ {function="formataValor($desconto)"}</span>
+            </div>
+            <div class="valor-comanda">
+                <span>(+) <a href="#modal-acrescimos">ACRÉSCIMOS</a></span> <span>R$ {function="formataValor($acrescimo)"}</span>
+            </div>
+            <div class="valor-comanda">
+                <span>(-) <a href="#modal-adiantamentos">ADIANTAMENTOS</a></span> <span>R$ {function="formataValor($adiantamento)"}</span>
+            </div>
+            <div class="valor-comanda">
+                <span><b>(=) TOTAL A PAGAR</b></span> <span><b>R$ {function="formataValor($valor_total)"}</b></span>
+            </div>
+            
+                
+            <div class="btn-comanda">                
+                <a class="btn-encerrar-mesa" href="#modal-encerrar-pedido">ENCERRAR VENDA</a>
+                <form action="http://192.168.0.118/adegamodelo/excluir_pedido" method="get">
+                  <input type="hidden" name="mesa" value="{$mesaID}">
+                  <input type="hidden" name="pedido" value="{$pedidoID}">                                                
+                  <input type="hidden" name="clienteID" value="{$clienteID}">
+                  <button class="btn-excluir-pedido"><i class="lar la-trash-alt"></i></button>
+                </form>
+            </div>
+            
+        </div>
+        {/if}
+    </div>
+    {/loop}
+    
+    <div class="produtos">
+        <div class="c-body">
+          <div class="wrapper">
+            <i id="left" class="las la-angle-left"></i>
+            <ul class="carousel">
+              {loop="$categorias"}
+              <li class="card">
+                <a href="#tab{$value.id_categoria}">
+                <div class="img"><img src="/adegamodelo/assets/images/{$value.imagem_categoria}" alt="img" draggable="false"></div>
+                <h2>{$value.nome_categoria}</h2> 
+                </a>         
+              </li>
+              {/loop}        
+            </ul>
+            <i id="right" class="las la-angle-right"></i>
+          </div>
+        </div>
+      
+        <article>
+      
+          {loop="$categorias"}
+      
+          {$categoriaID = $value.id_categoria}
+      
+          <section id="tab{$value.id_categoria}" {if="$categoriaID ==1"}class="active"{/if}>
+            
+            <div class="produtos-box">
+              
+              {loop="$produtos"}
+
+              {$produtoNome = $value.nome}
+              
+              {if="$categoriaID == $value.categoria"}
+      
+              {$menor_preco = $value.preco_custo * 1.2}
+
+              {$diferenca = $value.preco_venda - $menor_preco}
+
+              {$maior_desconto = $diferenca / $value.preco_venda * 100}
+      
+              <div class="produtos-box">          
+                    <div class="produto">
+                      <div class="produto_select">
+                        <a href="#" title="Menor preço: R$ {function="formataValor($menor_preco)"} (Desconto: {function="arredondar($maior_desconto)"}%)">
+                        <div class="produto-preco">
+                          R$ {function="formataValor($value.preco_venda)"}
+                        </div>
+                        </a>
+
+                        
+                        <div class="quantidade">
+                          <form action="http://192.168.0.118/adegamodelo/add" method="get">
+                            <input type="hidden" name="mesa" value="{$mesaID}">
+                            <input type="hidden" name="pedido" value="{$pedidoID}">
+                            <input type="hidden" name="produto" value="{$value.id}">
+                            <input type="hidden" name="tab" value="{$categoriaID}">
+                            <input type="hidden" name="clienteID" value="{$clienteID}">
+                          <div class="quant_add">
+                            <button type="submit"><i class="las la-plus"></i></button>
+                          </div>
+                          </form>
+                          
+                          <div class="quant_num">
+                            {loop="$pedidoData"}
+                            {if="$produtoNome==$value.produto"}
+                                {$produtoQtd = $value.quantidade}
+                                {$produtoQtd}                                
+                            {/if}
+                            {/loop}
+                          </div>                            
+                                                       
+                          <form action="http://192.168.0.118/adegamodelo/remove" method="get">                             
+                            <input type="hidden" name="mesa" value="{$mesaID}">
+                            <input type="hidden" name="pedido" value="{$pedidoID}">
+                            <input type="hidden" name="produto" value="{$value.id}">
+                            <input type="hidden" name="tab" value="{$categoriaID}">
+                            <input type="hidden" name="clienteID" value="{$clienteID}">
+                          <div class="quant_remove">
+                            <button type="submit"><i class="las la-minus"></i></button>
+                          </div>
+                          </form>                         
+                          
+                        </div>
+                       
+                      </div>
+                        <div class="produto-img">
+                            <img src="/adegamodelo/assets/images/{$value.imagem}" alt="">
+                        </div>
+                        <div class="produto-text">
+                            <div class="produto-desc">
+                                {$value.nome}
+                            </div>                      
+                        </div>
+                    </div>
+            </div>
+      
+              {/if}
+              
+              {/loop}
+      
+            </div>        
+              
+          </section> 
+          
+          {/loop}
+      
+        </article>
+      
+      </div>
+
+<div id="modal-cliente" class="modal">
+    
+    <div class="modal_content">
+        
+        <div class="modal_top">
+            <h2>INFORMAR CLIENTE DA MESA</h2><span><a href="#" class="modal_close">&times;</a></span>
+        </div>
+        <b>Cliente Atual:</b>
+        <div class="mesa-cliente-atual">
+          <div class="nome-cliente-atual">
+            <i class="las la-user"></i> {$nomeCliente}
+          </div>
+          <div class="btn-cliente-atual">
+            {if="$clienteID>=21"}
+            <form action="http://192.168.0.118/adegamodelo/registrar_cliente" method="get">
+              <input type="hidden" name="clienteID" value="{$mesaID}">
+              <input type="hidden" name="pedidoID" value="{$pedidoID}">
+              <input type="hidden" name="mesaID" value="{$mesaID}">                
+              <button type="submit"><i class="las la-times"></i></button>
+            </form>
+            {/if}
+          </div>
+        </div>
+        <b>Escolher outro Cliente:</b>
+        <div class="clientes-lista">
+          {loop="$clientes"}
+            
+            {if="$value.status==0"}
+            <div class="cliente-nome">
+             {$counter + 1}. {$value.nome} 
+             <div class="btn-cliente">
+              <form action="http://192.168.0.118/adegamodelo/registrar_cliente" method="get">
+                <input type="hidden" name="clienteID" value="{$value.id}">
+                <input type="hidden" name="pedidoID" value="{$pedidoID}">
+                <input type="hidden" name="mesaID" value="{$mesaID}">                
+                <button type="submit"><i class="lar la-check-square"></i></button>
+              </form>
+             </div>
+            </div>
+            {else}
+            <div class="cliente-nome" style="color:rgb(199, 194, 194);">
+              {$counter + 1}. {$value.nome} 
+              <span>Cliente já registrado em mesa.</span>
+             </div>            
+            {/if}
+            
+            
+          {/loop}
+        </div>
+        <b>Cadastrar Novo Cliente</b>
+        <div class="cliente-novo">
+          <form action="http://192.168.0.118/adegamodelo/registrar_cliente" method="get">
+            <input type="text" size="55" name="clienteNome">
+            <input type="hidden" name="pedidoID" value="{$pedidoID}">
+            <input type="hidden" name="mesaID" value="{$mesaID}">                
+            <button type="submit"><i class="las la-plus"></i></button>
+          </form>
+        </div>
+
+    </div>   
+
+</div>
+
+<!-- MODAL DESCONTOS -->
+<div id="modal-descontos" class="modal-pequeno">
+    
+  <div class="modal-pequeno_content">
+      
+      <div class="modal_top">
+          <h2>DESCONTOS</h2><span><a href="#" class="modal_close">&times;</a></span>
+      </div>     
+      <div class="desconto-opcoes">
+        <div class="opcao">
+          Percentual
+        </div>
+        <div class="valor">
+          {if="$desconto!=''"}
+          {if="$desconto!=0"}
+            {$percentualDesconto = $desconto / $subtotalPedido * 100}
+          {else}
+            {$percentualDesconto = 0}
+          {/if}
+          {/if}
+          <form action="http://192.168.0.118/adegamodelo/desconto" method="get">
+            % <input type="text" size="5" name="desconto" value="{$percentualDesconto}">
+            <input type="hidden" name="opcao" value="1">
+            <input type="hidden" name="pedidoID" value="{$pedidoID}">
+            <input type="hidden" name="mesaID" value="{$mesaID}">
+            <input type="hidden" name="subtotalPedido" value="{$subtotalPedido}">                 
+            <button type="submit"><i class="las la-arrow-right"></i></button>
+          </form>
+        </div>        
+      </div>
+
+      <div class="desconto-opcoes">
+        <div class="opcao">
+          Valor
+        </div>
+        <div class="valor">          
+          <form action="http://192.168.0.118/adegamodelo/desconto" method="get">
+            R$ <input type="text" size="5" name="desconto" value="{$desconto}">
+            <input type="hidden" name="opcao" value="2">
+            <input type="hidden" name="pedidoID" value="{$pedidoID}">
+            <input type="hidden" name="mesaID" value="{$mesaID}">
+            <input type="hidden" name="subtotalPedido" value="{$subtotalPedido}">                            
+            <button type="submit"><i class="las la-arrow-right"></i></button>
+          </form>
+        </div>        
+      </div>      
+      
+  </div> 
+  <div class="modal_footer">
+    <h4>Escolha a modalidade do desconto e clique na seta.</h4>
+  </div>
+
+</div>
+
+<!-- MODAL ACRÉSCIMOS -->
+<div id="modal-acrescimos" class="modal-pequeno">
+    
+  <div class="modal-pequeno_content">
+      
+      <div class="modal_top">
+          <h2>ACRÉSCIMOS</h2><span><a href="#" class="modal_close">&times;</a></span>
+      </div>     
+      <div class="desconto-opcoes">
+        <div class="opcao">
+          Percentual
+        </div>
+        <div class="valor">
+          {if="$acrescimo!=''"}
+          {if="$acrescimo!=0"}
+            {$percentualAcrescimo = $acrescimo / $subtotalPedido * 100}
+          {else}
+            {$percentualAcrescimo = 0}
+          {/if}
+          {/if}
+          <form action="http://192.168.0.118/adegamodelo/acrescimo" method="get">
+            % <input type="text" size="5" name="acrescimo" value="{$percentualAcrescimo}">
+            <input type="hidden" name="opcao" value="1">
+            <input type="hidden" name="pedidoID" value="{$pedidoID}">
+            <input type="hidden" name="mesaID" value="{$mesaID}">
+            <input type="hidden" name="subtotalPedido" value="{$subtotalPedido}">                 
+            <button type="submit"><i class="las la-arrow-right"></i></button>
+          </form>
+        </div>        
+      </div>
+
+      <div class="desconto-opcoes">
+        <div class="opcao">
+          Valor
+        </div>
+        <div class="valor">          
+          <form action="http://192.168.0.118/adegamodelo/acrescimo" method="get">
+            R$ <input type="text" size="5" name="acrescimo" value="{$acrescimo}">
+            <input type="hidden" name="opcao" value="2">
+            <input type="hidden" name="pedidoID" value="{$pedidoID}">
+            <input type="hidden" name="mesaID" value="{$mesaID}">
+            <input type="hidden" name="subtotalPedido" value="{$subtotalPedido}">                            
+            <button type="submit"><i class="las la-arrow-right"></i></button>
+          </form>
+        </div>        
+      </div>      
+      
+  </div> 
+  <div class="modal_footer">
+    <h4>Escolha a modalidade do acréscimo e clique na seta.</h4>
+  </div>
+
+</div>
+
+
+<!-- MODAL ADIANTAMENTOS -->
+<form action="http://192.168.0.118/adegamodelo/adiantamentos" method="get">
+<div id="modal-adiantamentos" class="modal">
+    
+  <div class="modal_content">
+    
+      <input type="hidden" name="pedidoID" value="{$pedidoID}">
+      <input type="hidden" name="mesaID" value="{$mesaID}">
+
+      <div class="modal_top">
+          <h2>PAGAMENTO ADIANTADO</h2><span><a href="#" class="modal_close">&times;</a></span>
+      </div>
+      <b>Informe o meio de pagamento.</b>
+      <div class="pagamento">
+        {if="$pedidoDetalhado!=''"}
+        {loop="$pedidoDetalhado"}
+          {$dinheiro = $value.pgto_dinheiro}
+          {$pix = $value.pgto_pix}
+          {$debito = $value.pgto_debito}
+          {$credito = $value.pgto_credito}
+          {$totalPedido = $subtotalPedido + $acrescimo - $desconto}
+        {/loop}
+        {else}
+          {$dinheiro = 0}
+          {$pix = 0}
+          {$debito = 0}
+          {$credito = 0}
+          {$totalPedido = 0}
+        {/if}
+        <div class="pagamento-forma">
+          <div class="pagamento-img">
+            <img src="/adegamodelo/assets/images/dinheiro.png" alt="">
+          </div>
+          <div class="pagamento-nome">
+            Dinheiro
+          </div>
+          <div class="pagamento-form">
+            <input type="text" id="form_pgto_dinheiro" name="form_pgto_dinheiro" onkeyup="soma()" value="{$dinheiro}">
+          </div>
+        </div>
+        
+        <div class="pagamento-forma">
+          <div class="pagamento-img">
+            <img src="/adegamodelo/assets/images/pix.png" alt="">
+          </div>
+          <div class="pagamento-nome">
+            Pix
+          </div>
+          <div class="pagamento-form">
+            <input type="text" id="form_pgto_pix" name="form_pgto_pix" onkeyup="soma()" value="{$pix}">
+          </div>
+        </div>
+
+        <div class="pagamento-forma">
+          <div class="pagamento-img">
+            <img src="/adegamodelo/assets/images/debito.png" alt="">
+          </div>
+          <div class="pagamento-nome">
+            Cartão Débito
+          </div>
+          <div class="pagamento-form">
+            <input type="text" id="form_pgto_debito" name="form_pgto_debito" onkeyup="soma()" value="{$debito}">
+          </div>
+        </div>
+
+        <div class="pagamento-forma">
+          <div class="pagamento-img">
+            <img src="/adegamodelo/assets/images/credito.png" alt="">
+          </div>
+          <div class="pagamento-nome">
+            Cartão Crédito
+          </div>
+          <div class="pagamento-form">
+            <input type="text" id="form_pgto_credito" name="form_pgto_credito" onkeyup="soma()" value="{$credito}">
+          </div>
+        </div>
+      
+        <div class="pagamento-forma">
+          <div class="pagamento-img">
+            <img src="/adegamodelo/assets/images/4564998.png" alt="">
+          </div>
+          <div class="pagamento-nome">
+            Total do Pedido<br>
+            <span class="text-muted">Valor da compra (-) Descontos (+) Acréscimos</span>
+          </div>
+          <div class="pagamento-form">
+            <span><b>R$ {function="formataValor($totalPedido)"}</b></span>
+            <span class="valor_total" id="valor_total">{$totalPedido}</b></span>
+          </div>
+        </div>
+        <div class="pagamento-forma">
+          <div class="pagamento-img">
+            <img src="/adegamodelo/assets/images/troco.jpg" alt="">
+          </div>
+          <div class="pagamento-nome">
+            Restante
+          </div>
+          <div class="pagamento-form">
+            <input type="text" id="restante" name="restante" disabled>
+          </div>
+        </div>
+
+      </div>     
+
+  </div>  
+  <div id="modal_footer" class="modal_footer">
+    
+  </div>
+ 
+
+</div>
+</form>
+
+
+<!-- MODAL ENCERRAMENTO -->
+<form action="http://192.168.0.118/adegamodelo/encerrar_venda" method="get">
+  <div id="modal-encerrar-pedido" class="modal">
+      
+    <div class="modal_content">
+      
+        <input type="hidden" name="pedidoID" value="{$pedidoID}">
+        <input type="hidden" name="mesaID" value="{$mesaID}">
+        <input type="hidden" name="clienteID" value="{$clienteID}">
+  
+        <div class="modal_top">
+            <h2>ENCERRAR VENDA</h2><span><a href="#" class="modal_close">&times;</a></span>
+        </div>
+        <b>Informe o meio de pagamento.</b>
+        <div class="pagamento">
+          {if="$pedidoDetalhado!=''"}
+          {loop="$pedidoDetalhado"}
+            {$dinheiro = $value.pgto_dinheiro}
+            {$pix = $value.pgto_pix}
+            {$debito = $value.pgto_debito}
+            {$credito = $value.pgto_credito}
+            {$totalPedido = $subtotalPedido + $acrescimo - $desconto}
+          {/loop}
+          {else}
+            {$dinheiro = 0}
+            {$pix = 0}
+            {$debito = 0}
+            {$credito = 0}
+            {$totalPedido = 0}
+          {/if}
+          <div class="pagamento-forma">
+            <div class="pagamento-img">
+              <img src="/adegamodelo/assets/images/dinheiro.png" alt="">
+            </div>
+            <div class="pagamento-nome">
+              Dinheiro
+            </div>
+            <div class="pagamento-form">
+              <input type="text" id="final_form_pgto_dinheiro" name="final_form_pgto_dinheiro" onkeyup="soma_final()" value="{$dinheiro}">
+            </div>
+          </div>
+          
+          <div class="pagamento-forma">
+            <div class="pagamento-img">
+              <img src="/adegamodelo/assets/images/pix.png" alt="">
+            </div>
+            <div class="pagamento-nome">
+              Pix
+            </div>
+            <div class="pagamento-form">
+              <input type="text" id="final_form_pgto_pix" name="final_form_pgto_pix" onkeyup="soma_final()" value="{$pix}">
+            </div>
+          </div>
+  
+          <div class="pagamento-forma">
+            <div class="pagamento-img">
+              <img src="/adegamodelo/assets/images/debito.png" alt="">
+            </div>
+            <div class="pagamento-nome">
+              Cartão Débito
+            </div>
+            <div class="pagamento-form">
+              <input type="text" id="final_form_pgto_debito" name="final_form_pgto_debito" onkeyup="soma_final()" value="{$debito}">
+            </div>
+          </div>
+  
+          <div class="pagamento-forma">
+            <div class="pagamento-img">
+              <img src="/adegamodelo/assets/images/credito.png" alt="">
+            </div>
+            <div class="pagamento-nome">
+              Cartão Crédito
+            </div>
+            <div class="pagamento-form">
+              <input type="text" id="final_form_pgto_credito" name="final_form_pgto_credito" onkeyup="soma_final()" value="{$credito}">
+            </div>
+          </div>
+        
+          <div class="pagamento-forma">
+            <div class="pagamento-img">
+              <img src="/adegamodelo/assets/images/4564998.png" alt="">
+            </div>
+            <div class="pagamento-nome">
+              Total do Pedido<br>
+              <span class="text-muted">Valor da compra (-) Descontos (+) Acréscimos</span>
+            </div>
+            <div class="pagamento-form">
+              <span><b>R$ {function="formataValor($totalPedido)"}</b></span>
+              <span class="valor_total" id="final_valor_total">{$totalPedido}</b></span>
+            </div>
+          </div>
+          <div class="pagamento-forma">
+            <div class="pagamento-img">
+              <img src="/adegamodelo/assets/images/troco.jpg" alt="">
+            </div>
+            <div class="pagamento-nome">
+              Restante
+            </div>
+            <div class="pagamento-form">
+              <input type="text" id="final_restante" name="final_restante" disabled>
+            </div>
+          </div>
+  
+        </div>     
+  
+    </div>  
+    <div id="modal_footer_final" class="modal_footer">
+      
+    </div>
+   
+  
+  </div>
+  </form>
+
+<script>  
+
+  function soma() {
+  
+    total = document.getElementById("valor_total").innerHTML
+    dinheiro = document.getElementById("form_pgto_dinheiro").value
+    pix = document.getElementById("form_pgto_pix").value
+    debito = document.getElementById("form_pgto_debito").value
+    credito = document.getElementById("form_pgto_credito").value
+    restante = total - dinheiro - pix - debito - credito
+
+    if(restante >= 0) {
+
+      var btn = document.querySelector("#modal_footer");
+      btn.innerHTML = "<button type='submit' class='btn-salvar-adiantamento'>Salvar</button>";
+
+    } else {
+
+      var btn = document.querySelector("#modal_footer");
+      btn.innerHTML = "<button class='invisivel'>Salvar</button>";
+
+    }
+    
+    document.getElementById("restante").value = restante.toFixed(2);
+
+}
+
+soma();
+ 
+
+</script>
+
+
+<script>  
+
+  function soma_final() {
+  
+    total = document.getElementById("final_valor_total").innerHTML
+    dinheiro = document.getElementById("final_form_pgto_dinheiro").value
+    pix = document.getElementById("final_form_pgto_pix").value
+    debito = document.getElementById("final_form_pgto_debito").value
+    credito = document.getElementById("final_form_pgto_credito").value
+    restante = total - dinheiro - pix - debito - credito
+
+    if(restante == 0) {
+
+      var btn = document.querySelector("#modal_footer_final");
+      btn.innerHTML = "<button type='submit' class='btn-salvar-adiantamento'>Encerrar Venda</button>";
+
+    } else {
+
+      var btn = document.querySelector("#modal_footer_final");
+      btn.innerHTML = "<button class='invisivel'>Salvar</button>";
+
+    }
+    
+    document.getElementById("final_restante").value = restante.toFixed(2);
+
+}
+
+soma_final();
+ 
+
+</script>
+

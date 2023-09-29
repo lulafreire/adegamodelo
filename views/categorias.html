@@ -1,0 +1,84 @@
+<div class="produtos">
+  <div class="c-body">
+    <div class="wrapper">
+      <i id="left" class="las la-angle-left"></i>
+      <ul class="carousel">
+        {loop="$categorias"}
+        <li class="card">
+          <a href="#tab{$value.id_categoria}">
+          <div class="img"><img src="/adegamodelo/assets/images/{$value.imagem_categoria}" alt="img" draggable="false"></div>
+          <h2>{$value.nome_categoria}</h2> 
+          </a>         
+        </li>
+        {/loop}        
+      </ul>
+      <i id="right" class="las la-angle-right"></i>
+    </div>
+  </div>
+
+  <article>
+
+    {loop="$categorias"}
+
+    {$categoriaID = $value.id_categoria}
+
+    <section id="tab{$value.id_categoria}" class="produtos-box active">
+      
+      <div class="produtos-box">
+        
+        {loop="$produtos"}
+        
+        {if="$categoriaID == $value.categoria"}
+
+        {$menor_preco = $value.preco_custo * 1.2}
+
+        <div class="produtos-box">          
+              <div class="produto">
+                <div class="produto_select">
+                  <a href="#" title="Menor preço: R$ {function="formataValor($menor_preco)"}">
+                  <div class="produto-preco">
+                    R$ {function="formataValor($value.preco_venda)"}
+                  </div>
+                  </a>
+                  <div class="quantidade">
+                    <a href="add/{$value.id}">
+                    <div class="quant_add">
+                      <i class="las la-plus-circle"></i>
+                    </div>
+                    </a>
+                    
+                    <div class="quant_num">
+                      2
+                    </div>
+                    <a href="remove/{$value.id}">
+                    <div class="quant_remove">
+                      <i class="las la-minus-circle"></i>
+                    </div>
+                    </a>
+                  </div>
+                </div>
+                  <div class="produto-img">
+                      <img src="/adegamodelo/assets/images/{$value.imagem}" alt="">
+                  </div>
+                  <div class="produto-text">
+                      <div class="produto-desc">
+                          {$value.nome}
+                      </div>                      
+                  </div>
+              </div>
+      </div>
+
+        {/if}
+        
+        {/loop}
+
+      </div>        
+        
+    </section> 
+    
+    {/loop}
+
+  </article>
+
+</div>
+

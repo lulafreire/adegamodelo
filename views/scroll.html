@@ -1,0 +1,62 @@
+<div class="pedido">
+
+
+    <div class="comanda">
+        <div class="topo-comanda">
+                <span class="mesa_num">MESA {$mesa_num}</span>
+                <span class="mesa_cliente"><i class="las la-user"></i>{if="$cliente!='LIVRE'"}{$cliente}{else}CLIENTE NÃO IDENTIFICADO{/if}</span>
+            </div>
+        <div class="scrollbox">            
+            <div class="scrollbox-inner">                
+                <div class="corpo-comanda">
+                    {if="($num_pedido!=0)"} <span class="num_pedido"><a href="print/{$num_pedido}">PEDIDO Nº&nbsp;&nbsp;<b>{$num_pedido}&nbsp;&nbsp;<i class="las la-print"></i></b></a></span>{/if}
+                    <div class="venda">
+                        {loop="$pedidos"}
+                        <div class="venda_produto">
+                            {$value.produto}
+                        </div>
+                        <div class="venda_disc">
+                            <div class="venda_quant">
+                                {$value.quantidade} x R$ {function="formataValor($value.valor_unit)"}
+                            </div>
+                            <div class="venda_valor">
+                                <b>R$ {function="formataValor($value.quantidade * $value.valor_unit)"}</b>
+                            </div>                    
+                        </div>
+                        {/loop}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rodape-comanda">
+            <div class="valor-comanda">
+                <span>VALOR DA MESA</span> <span>R$ {function="formataValor($mesa_valor)"}</span>
+            </div>
+            <div class="valor-comanda">
+                <span>(-) DESCONTOS</span> <span>R$ {function="formataValor($mesa_valor)"}</span>
+            </div>
+            <div class="valor-comanda">
+                <span>(+) ACRÉSCIMOS</span> <span>R$ {function="formataValor($mesa_valor)"}</span>
+            </div>
+            <div class="valor-comanda">
+                <span>(-) ADIANTAMENTOS</span> <span>R$ {function="formataValor($mesa_valor)"}</span>
+            </div>
+            <div class="valor-comanda">
+                <span><b>(=) TOTAL A PAGAR</b></span> <span><b>R$ {function="formataValor($mesa_valor)"}</b></span>
+            </div>
+                
+            <div class="btn-comanda">
+                <a class="btn-salvar-mesa" href="salvar_mesa/{$mesa_num}">GRAVAR ALTERAÇÕES</a>
+                <a class="btn-encerrar-mesa" href="encerrar_mesa/{$mesa_num}">ENCERRAR VENDA</a>
+            </div>
+        </div>
+    </div>
+    <div class="produtos">
+        <div class="categorias">
+            Categorias
+        </div>
+        <div class="mercadorias">
+            Mercadorias
+        </div>
+    </div>
+</div>

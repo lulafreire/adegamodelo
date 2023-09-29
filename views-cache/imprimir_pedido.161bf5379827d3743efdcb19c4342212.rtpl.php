@@ -1,0 +1,1 @@
+<?php if(!class_exists('Rain\Tpl')){exit;}?>Imprimir o pedido <?php echo htmlspecialchars( $num_pedido, ENT_COMPAT, 'UTF-8', FALSE ); ?>

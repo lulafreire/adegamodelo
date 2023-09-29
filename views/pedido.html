@@ -1,0 +1,131 @@
+<div class="comanda">
+    <div class="topo-comanda">
+        <span class="mesa_num">Pedido nº {$pedidos.0.num_pedido}</span>
+        <span class="mesa_cliente"><i class="las la-user"></i>{$nomeCliente}</span>
+    </div>
+    
+    <div class="scrollbox">            
+        <div class="scrollbox-inner">                
+            <div class="corpo-comanda">
+                
+                <div class="venda">
+                    {loop="$lancamentos"}
+                    {if="$value.quantidade >=1"}
+                    <div class="venda_produto">
+                        {$value.produto}                         
+                    </div>
+                    <div class="venda_disc">
+                        <div class="venda_quant">
+                            {$value.quantidade} x R$ {function="formataValor($value.valor_unit)"}
+                        </div>
+                        <div class="venda_valor">
+                            <b>R$ {function="formataValor($value.quantidade * $value.valor_unit)"}</b>
+                        </div>                    
+                    </div>
+                    {/if}
+                    {/loop}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="rodape-comanda">
+            
+        <div class="valor-comanda">
+            <span>VALOR DO PEDIDO</span> <span>R$ {function="formataValor($pedidos.0.subtotal)"}</span>
+        </div>
+        <div class="valor-comanda">
+            <span>(-) <a href="#modal-descontos">DESCONTOS</a></span> <span>R$ {function="formataValor($pedidos.0.descontos)"}</span>
+        </div>
+        <div class="valor-comanda">
+            <span>(+) <a href="#modal-acrescimos">ACRÉSCIMOS</a></span> <span>R$ {function="formataValor($pedidos.0.acrescimos)"}</span>
+        </div>        
+        <div class="valor-comanda">
+            <span><b>(=) TOTAL PAGO</b></span> <span><b>R$ {function="formataValor($pedidos.0.pgto_total)"}</b></span>
+        </div>
+    </div>
+
+</div>
+
+<div class="pgto-vendas">
+
+    <div class="pagamento">    
+        <div class="pagamento-forma">
+          <div class="pagamento-img">
+            <img src="/adegamodelo/assets/images/dinheiro.png" alt="">
+          </div>
+          <div class="pagamento-nome">
+            Dinheiro
+          </div>
+          <div class="pagamento-form">
+            R$ {function="formataValor($pedidos.0.pgto_dinheiro)"}
+          </div>
+        </div>
+        
+        <div class="pagamento-forma">
+          <div class="pagamento-img">
+            <img src="/adegamodelo/assets/images/pix.png" alt="">
+          </div>
+          <div class="pagamento-nome">
+            Pix
+          </div>
+          <div class="pagamento-form">
+            R$ {function="formataValor($pedidos.0.pgto_pix)"}
+          </div>
+        </div>
+    
+        <div class="pagamento-forma">
+          <div class="pagamento-img">
+            <img src="/adegamodelo/assets/images/debito.png" alt="">
+          </div>
+          <div class="pagamento-nome">
+            Cartão Débito
+          </div>
+          <div class="pagamento-form">
+            R$ {function="formataValor($pedidos.0.pgto_debito)"}
+          </div>
+        </div>
+    
+        <div class="pagamento-forma">
+          <div class="pagamento-img">
+            <img src="/adegamodelo/assets/images/credito.png" alt="">
+          </div>
+          <div class="pagamento-nome">
+            Cartão Crédito
+          </div>
+          <div class="pagamento-form">
+            R$ {function="formataValor($pedidos.0.pgto_credito)"}
+          </div>
+        </div>
+      
+        <div class="pagamento-forma">
+          <div class="pagamento-img">
+            <img src="/adegamodelo/assets/images/4564998.png" alt="">
+          </div>
+          <div class="pagamento-nome">
+            Valor Pago<br>
+            <span class="text-muted">Valor da compra (-) Descontos (+) Acréscimos</span>
+          </div>
+          <div class="pagamento-form">
+            <span><b>R$ {function="formataValor($pedidos.0.pgto_total)"}</b></span>        
+          </div>
+        </div>  
+    
+      </div>
+      
+      <div class="pedido-options">
+        <a href="editar/{$pedidos.0.num_pedido}"><button class="btn-azul"><i class="lar la-edit"></i> Editar</button></a>
+        <a href="imprimir/{$pedidos.0.num_pedido}"><button class="btn-cinza"><i class="las la-print"></i> Imprimir</button></a>
+        <a href="excluir/{$pedidos.0.num_pedido}"><button class="btn-vermelho"><i class="lar la-trash-alt"></i> Excluir</button></a>
+      </div>
+
+</div>
+
+<div class="box-lucro">
+  <div class="icon-lucro">
+    <i class="las la-hand-holding-usd"></i>
+  </div>
+  <div class="lucro-txt">
+    <strong>R$ {function="formataValor($lucro_liquido)"}</strong>&nbsp;&nbsp;<span style="font-size: 20px; color: grey;">{$lucro_perc}%&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Tarifas: &nbsp;</span><strong style="color: brown;">R$ {function="formataValor($tarifas)"}</strong>
+    
+  </div>
+</div>

@@ -1,0 +1,1077 @@
+<div class="financeiro-container">
+    <div class="financeiro-content">
+
+        <div class="financeiro-caixa">
+            <div class="financeiro-caixa-topo">
+                <i class="las la-cash-register"></i> &nbsp;&nbsp;Movimento do Caixa
+            </div>
+
+            {if="$caixa!=0"}
+                {if="$caixa.0.status!=2"}
+                
+                <!-- O caixa de hoje foi aberto e ainda não foi fechado -->
+                <div class="caixa-content">
+                
+                    <div class="caixa-item">
+                        
+                        <div class="caixa-item-texto">
+                            Saldo Inicial
+                        </div>
+                        <div class="caixa-item-valor">
+                            R$ {function="formataValor($caixa.0.saldo_inicial)"}
+                        </div>
+                        <div class="caixa-item-opcao">
+                            <a href="#modal-valor-inicial"><i class="lar la-edit"></i></a>
+                        </div>
+    
+                    </div>
+    
+                    <div class="caixa-item">
+                        
+                        <div class="caixa-item-texto">
+                            <a href="#modal-editar-entradas">Entradas</a>
+                        </div>
+                        <div class="caixa-item-valor">
+                            R$ {function="formataValor($caixa.0.entradas)"}
+                        </div>
+                        <div class="caixa-item-opcao">
+                            <a href="#modal-entrada"><i class="las la-plus-circle"></i></a>
+                        </div>
+    
+                    </div>
+    
+                    <div class="caixa-item">
+                        
+                        <div class="caixa-item-texto">
+                            <a href="#modal-editar-saidas">Saídas</a>
+                        </div>
+                        <div class="caixa-item-valor">
+                            R$ {function="formataValor($caixa.0.saidas)"}
+                        </div>
+                        <div class="caixa-item-opcao">
+                            <a href="#modal-saida"><i class="las la-plus-circle"></i></a>
+                        </div>
+    
+                    </div>
+    
+                    <div class="caixa-item">
+                        
+                        <div class="caixa-item-texto">
+                            <b>Saldo Atual</b>
+                        </div>
+                        <div class="caixa-item-valor">
+                            <b>R$ {function="formataValor($caixa.0.saldo_final)"}</b>
+                        </div>
+                        <div class="caixa-item-opcao">
+                            
+                        </div>
+    
+                    </div>
+    
+                    <div class="caixa-btn">
+                        <a href="#modal-fechar-caixa"><button>Fechar Caixa</button></a>
+                    </div>
+    
+                </div>
+                {else}
+                
+                <!-- O caixa de hoje já foi aberto e fechado. Deseja reabrir? -->
+                <div class="caixa-content">
+                
+                    <div class="caixa-msg">
+                        
+                        O caixa de hoje já foi fechado.
+    
+                    </div> 
+                    <div class="caixa-item">
+                        
+                        <div class="caixa-item-texto">
+                            <b>Saldo Final</b>
+                        </div>
+                        <div class="caixa-item-valor">
+                            <b>R$ {function="formataValor($caixa.0.saldo_final)"}</b>
+                        </div>
+    
+                    </div>
+
+                    <div class="caixa-item">
+                        
+                        <div class="caixa-item-texto">
+                            <b>Diferença</b>
+                        </div>
+                        <div class="caixa-item-valor">
+                            <b>R$ {function="formataValor($caixa.0.diferenca)"}</b>
+                        </div>
+    
+                    </div>
+    
+                    <div class="caixa-btn">
+                        <a href="reabrir_caixa"><button>Reabrir Caixa</button></a>
+                    </div>
+    
+                </div>
+                {/if}
+            {else}
+                {if="$caixa_aberto!=0"}
+                
+                <!-- Existe um caixa aberto de outro dia. Deverá ser fechado!-->
+                <div class="caixa-content">
+                
+                    <div class="caixa-msg">
+                        
+                        O caixa do dia {function="formataData($caixa_aberto.0.data_abertura)"} ainda não foi fechado. É necessário fechá-lo para iniciar as vendas.
+    
+                    </div>                    
+    
+                    <div class="caixa-btn">
+                        <a href="#modal-caixa-aberto"><button>Fechar Caixa do dia {function="formataData($caixa_aberto.0.data_abertura)"}</button></a>
+                    </div>
+    
+                </div>
+                
+                {else}
+                
+                <!-- Nenhuma sitação crítica. Abrir caixa do dia -->
+                <div class="caixa-content">
+
+                    <div class="caixa-btn">
+                        <a href="#modal-caixa"><button>Abrir Caixa</button></a>
+                    </div>                    
+
+                </div>
+                
+                {/if}
+            {/if}
+            
+            <div class="caixas-anteriores">
+                <b>Últimos 3 Fechamentos</b>
+
+                {if="$fechamentos !=0"}
+                    {loop="$fechamentos"}
+                    <div class="fechamento">
+                        <div class="fechamento-texto">
+                            <a href="https://192.168.0.118/adegamodelo/financeiro#modal-caixa-dia-anterior?dia_anterior={function="reduzData($value.data_abertura)"}">{function="formataData($value.data_abertura)"}</a>
+                        </div>
+                        <div class="fechamento-valor">
+                            <b>R$ {function="formataValor($value.saldo_final)"}</b>
+                            <a title='Diferença: R$ {function="formataValor($value.diferenca)"}'><i class='las la-coins {if="$value.diferenca<0"}font-vermelha{else}font-azul{/if}'></i></a>
+                        </div>
+                    </div>                    
+                    {/loop}
+
+                {else}
+
+                <div class="caixa-msg">
+                        
+                   Nenhum movimento de caixa foi registrado nos dias anteriores.
+
+                </div>
+                
+                {/if}
+            </div>
+            
+        </div>
+       
+    
+        <div class="financeiro-detalhes">
+            <div class="financeiro-detalhes-topo">
+                <i class="las la-asterisk"></i> &nbsp;&nbsp;Detalhamento das Vendas
+            </div>
+            <div class="financeiro-detalhes-modalidades">
+                
+                <div class="modalidade">
+                    <div class="modalidade-img">
+                        <img src="/adegamodelo/assets/images/dinheiro.png" alt="">
+                    </div>
+                    <div class="modalidade-nome">
+                        Dinheiro
+                    </div>
+                    <div class="modalidade-valor">
+                        <b>R$ {function="formataValor($vendasDinheiro)"}</b>
+                    </div>
+                </div>
+
+                <div class="modalidade">
+                    <div class="modalidade-img">
+                        <img src="/adegamodelo/assets/images/pix.png" alt="">
+                    </div>
+                    <div class="modalidade-nome">
+                        Pix
+                    </div>
+                    <div class="modalidade-valor">
+                        <b>R$ {function="formataValor($vendasPix)"}</b>
+                    </div>
+                </div>
+
+                <div class="modalidade">
+                    <div class="modalidade-img">
+                        <img src="/adegamodelo/assets/images/debito.png" alt="">
+                    </div>
+                    <div class="modalidade-nome">
+                        Débito
+                    </div>
+                    <div class="modalidade-valor">
+                        <b>R$ {function="formataValor($vendasDebito)"}</b>
+                    </div>
+                </div>
+
+                <div class="modalidade">
+                    <div class="modalidade-img">
+                        <img src="/adegamodelo/assets/images/credito.png" alt="">
+                    </div>
+                    <div class="modalidade-nome">
+                        Crédito
+                    </div>
+                    <div class="modalidade-valor">
+                        <b>R$ {function="formataValor($vendasCredito)"}</b>
+                    </div>
+                </div>
+
+            </div>
+            <div class="financeiro-detalhes-grafico">
+                <canvas id="chart_Modalidades"></canvas>
+            </div>
+        </div>
+        
+        <div class="financeiro-resultados">
+            <div class="financeiro-resultados-topo">
+                <i class="las la-dollar-sign"></i> Resultado Financeiro (últimos 12 meses)
+            </div>
+            <div class="financeiro-resultados-grafico">
+                <canvas id="chart_Resultados"></canvas>
+            </div>  
+            <div class="financeiro-resultados-top3">
+                <div class="financeiro-resultados-top3-titulo">
+                    <b>Principais Despesas (últimos 12 meses)</b>
+                    <div class="despecas-opcoes">
+                        <a href="#modal-despesa" title="Adicionar despesa"><i class="las la-plus-circle"></i></a>
+                        <a href="despesas" title="Ver todas as despesas"><i class="lar la-file-alt"></i></a>
+                    </div>
+                </div>
+                <div class="top-despesas">
+                    {if="$top5despesas!=0"}
+                    {loop="$top5despesas"}
+                    <div class="despesa-box">
+                        <div class="despesa-valor">
+                            {function="formataValor($value.valor)"}
+                        </div>                    
+                        <div class="despesa-descricao">
+                            {$value.descricao}
+                        </div>
+                    </div>
+                    {/loop}
+                    {else}
+                    <div class="caixa-msg">
+                        Nenhuma despesa cadastrada nos últimos 12 meses.
+                    </div>
+                    {/if}
+                </div>
+            </div>
+        </div>       
+        
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('chart_Resultados');
+  
+    new Chart(ctx, {
+        data: {
+        datasets: [{
+            type: 'line',
+            label: 'Faturamento',
+            data: [
+                {$faturamentoMes01},
+                {$faturamentoMes02},
+                {$faturamentoMes03},
+                {$faturamentoMes04},
+                {$faturamentoMes05},
+                {$faturamentoMes06},
+                {$faturamentoMes07},
+                {$faturamentoMes08},
+                {$faturamentoMes09},
+                {$faturamentoMes10},
+                {$faturamentoMes11},
+                {$faturamentoMesAtual}
+            ]
+        }, {
+            type: 'line',
+            label: 'Lucros',
+            data: [
+                {$lucroMes01},
+                {$lucroMes02},
+                {$lucroMes03},
+                {$lucroMes04},
+                {$lucroMes05},
+                {$lucroMes06},
+                {$lucroMes07},
+                {$lucroMes08},
+                {$lucroMes09},
+                {$lucroMes10},
+                {$lucroMes11},
+                {$lucroMesAtual},
+            ],
+        }, {
+            type: 'line',
+            label: 'Despesas',
+            data: [
+                {$despesaMes01},
+                {$despesaMes02},
+                {$despesaMes03},
+                {$despesaMes04},
+                {$despesaMes05},
+                {$despesaMes06},
+                {$despesaMes07},
+                {$despesaMes08},
+                {$despesaMes09},
+                {$despesaMes10},
+                {$despesaMes11},
+                {$despesaMesAtual},
+            ],
+        }],
+        labels: ['{$mes01}', '{$mes02}', '{$mes03}', '{$mes04}','{$mes05}','{$mes06}','{$mes07}','{$mes08}','{$mes09}','{$mes10}','{$mes11}','{$mes12}']
+    },    
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+
+<script>
+    const ctx2 = document.getElementById('chart_Modalidades');
+  
+    new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: ['Dinheiro', 'Pix', 'Débito', 'Crédito'],
+        datasets: [{
+          label: 'Percentual das Vendas',
+          data: [{$percDinheiro}, {$percPix}, {$percDebito}, {$percCredito}],
+          borderWidth: 1,
+          backgroundColor: '#909909',
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+
+<script>
+    const ctx3 = document.getElementById('chart_Despesas');
+  
+    new Chart(ctx3, {
+      type: 'bar',
+      data: {
+        labels: ['Dinheiro', 'Pix', 'Débito', 'Crédito'],
+        datasets: [{
+          label: 'Percentual das Vendas',
+          data: [{$percDinheiro}, {$percPix}, {$percDebito}, {$percCredito}],
+          borderWidth: 1,
+          backgroundColor: '#909909',
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+
+<!-- MODAL CAIXA -->
+<div id="modal-caixa" class="modal-pequeno">
+    
+    <div class="modal-pequeno_content">
+        
+        <div class="modal_top">
+            <h2>ABRIR CAIXA</h2><span><a href="#" class="modal_close">&times;</a></span>
+        </div>     
+        <div class="desconto-opcoes">
+          <div class="opcao">
+            Valor Inicial
+          </div>
+          <div class="valor">            
+            <form action="http://192.168.0.118/adegamodelo/abrir_caixa" method="get">
+              <input type="text" size="5" name="valor_inicial" value="">             
+          </div>        
+        </div>        
+    </div> 
+    <div class="modal_footer">
+        <button class='btn-salvar-adiantamento'>Abrir</button>
+    </div>
+    </form>
+  
+</div>
+
+<!-- MODAL ALTERAR VALOR INICIAL -->
+<div id="modal-valor-inicial" class="modal-pequeno">
+    
+    <div class="modal-pequeno_content">
+        
+        <div class="modal_top">
+            <h2>ALTERAR SALDO INICIAL</h2><span><a href="#" class="modal_close">&times;</a></span>
+        </div>     
+        <div class="desconto-opcoes">
+          <div class="opcao">
+            Valor Inicial
+          </div>
+          <div class="valor">            
+            <form action="http://192.168.0.118/adegamodelo/atualizar_caixa" method="get">
+              {if="$caixa!=0"}<input type="text" size="5" name="valor" value="{$caixa.0.saldo_inicial}">{/if}
+          </div>        
+        </div>        
+    </div> 
+    <div class="modal_footer">
+        <button class='btn-salvar-adiantamento'>Alterar</button>
+    </div>
+    </form>
+  
+</div>
+
+<!-- MODAL ENTRADA -->
+<div id="modal-entrada" class="modal-pequeno">
+    
+    <div class="modal-pequeno_content">
+        
+        <div class="modal_top">
+            <h2>ENTRADA DE DINHEIRO</h2><span><a href="#" class="modal_close">&times;</a></span>
+        </div>     
+        <div class="desconto-opcoes">
+          <div class="opcao">
+            Valor R$
+          </div>
+          <div class="valor">            
+            <form action="http://192.168.0.118/adegamodelo/caixa_entrada" method="get">
+              <input type="text" size="5" name="valor" value="">             
+          </div>                 
+        </div>
+        <div class="descricao">
+            Descrição:
+            <input type="text" name="descricao" size="50">
+        </div>         
+    </div> 
+    <div class="modal_footer">
+        <button class='btn-salvar-adiantamento'>Lançar</button>
+    </div>
+    </form>
+  
+</div>
+
+<!-- ALERTA -->
+<div id="alerta-excluir-entrada" class="modal-pequeno">
+    
+    <div class="modal-pequeno_content">
+        
+        <div class="modal_top">
+            <h2>ALERTA!</h2><span><a href="#" class="modal_close">&times;</a></span>
+        </div>
+
+        <div class="caixa-msg">
+                        
+            Não é permitido excluir esse tipo de Entrada.<br>Caso necessário, cancele o pedido.
+    
+        </div>                
+           
+    </div>     
+  
+</div>
+
+<!-- MODAL EDITAR ENTRADA -->
+<div id="modal-editar-entradas" class="modal">
+    
+    <div class="modal_content">
+        
+        <div class="modal_top">
+            <h2>ENTRADAS</h2><span><a href="#" class="modal_close">&times;</a></span>
+        </div>
+        {if="$entradas!=0"}
+
+        {loop="$entradas"}
+
+        <div class="caixa-item">
+                        
+            <div class="caixa-item-texto" style="width: 250px;">
+                {$value.descricao}
+            </div>
+            <div class="caixa-item-valor">
+                R$ {function="formataValor($value.valor)"}
+            </div>
+            
+            <div class="caixa-item-opcao">
+                <a href="excluir_entrada?valor={$value.valor}&descricao={$value.descricao}"><i class="lar la-trash-alt"></i></a>
+            </div>
+
+        </div>
+
+        {/loop}
+
+        {else} 
+
+        <div class="caixa-msg">
+            Não foram registradas entradas no Caixa hoje.
+        </div>
+
+        {/if}
+                 
+    </div>     
+  
+</div>
+
+<!-- MODAL EDITAR SAÍDA -->
+<div id="modal-editar-saidas" class="modal">
+    
+    <div class="modal_content">
+        
+        <div class="modal_top">
+            <h2>SAÍDAS</h2><span><a href="#" class="modal_close">&times;</a></span>
+        </div>
+        {if="$saidas!=0"}
+
+        {loop="$saidas"}
+
+        <div class="caixa-item">
+                        
+            <div class="caixa-item-texto" style="width: 250px;">
+                {$value.descricao}
+            </div>
+            <div class="caixa-item-valor">
+                R$ {function="formataValor($value.valor)"}
+            </div>
+            <div class="caixa-item-opcao">
+                <a href="excluir_saida?valor={$value.valor}&descricao={$value.descricao}"><i class="lar la-trash-alt"></i></a>
+            </div>
+
+        </div>
+
+        {/loop}
+
+        {else} 
+
+        <div class="caixa-msg">
+            Não foram registradas saídas do Caixa hoje.
+        </div>
+
+        {/if}
+                 
+    </div>     
+  
+</div>
+
+{if="$caixa!=0"}
+<!-- MODAL SAÍDA  -->
+<form action="http://192.168.0.118/adegamodelo/caixa_saida" method="get">
+<div id="modal-saida" class="modal-pequeno">
+    
+    <div class="modal-pequeno_content">
+        
+        <div class="modal_top">
+            <h2>RETIRADA DE DINHEIRO</h2><span><a href="#" class="modal_close">&times;</a></span>
+        </div>     
+        <div class="desconto-opcoes">
+          <div class="opcao">
+            Valor R$
+          </div>
+          <div class="valor">            
+                <input type="hidden" id="saldo_final" value="{$caixa.0.saldo_final}">
+              <input type="text" size="5" name="valor" id="vlr_despesa" value="" onkeyup=" soma_despesa()" required>             
+          </div>                 
+        </div>
+        <div class="despesa">
+            Descrição:
+            <select name="descricao" required>
+                <option value="">Escolha...</option>
+                <option value="Pagamento de Água">Pagamento de Água</option>
+                <option value="Pagamento de Energia">Pagamento de Energia</option>
+                <option value="Pagamento de Aluguel">Pagamento de Aluguel</option>
+                <option value="Pagamento de Internet">Pagamento de Internet</option>
+                <option value="Pagamento de Telefone">Pagamento de Telefone</option>
+                <option value="Pagamento de Funcionário">Pagamento de Funcionário</option>
+                <option value="Compra de Mercadoria">Compra de Mercadoria</option>
+                <option value="Cofre">Cofre</option>
+                <option value="Despesas Pessoais">Despesas Pessoais</option>
+            </select>
+        </div>         
+    </div> 
+    <div class="modal_footer">
+        <button type="submit" id="btn-despesa" class="btn-salvar-adiantamento">Lançar Saída</button>
+    </div>  
+</div>
+</form>
+{/if}
+
+<!-- MODAL DESPESA  -->
+<form action="http://192.168.0.118/adegamodelo/lanca_despesa" method="get">
+    <div id="modal-despesa" class="modal-pequeno">
+        
+        <div class="modal-pequeno_content">
+            
+            <div class="modal_top">
+                <h2>LANÇAMENTO DE DESPESA</h2><span><a href="#" class="modal_close">&times;</a></span>
+            </div>     
+            <div class="desconto-opcoes">
+              <div class="opcao">
+                Valor R$
+              </div>
+              <div class="valor">                                
+                  <input type="text" size="5" name="valor" value="" required>             
+              </div> 
+              <div class="opcao">
+                Data
+              </div>
+              <div class="valor">                                
+                  <input type="date" name="data" id="data" value="" required>             
+              </div>                
+            </div>
+            <div class="despesa">
+                Descrição:
+                <select name="descricao" required>
+                    <option value="">Escolha...</option>
+                    <option value="Pagamento de Água">Pagamento de Água</option>
+                    <option value="Pagamento de Energia">Pagamento de Energia</option>
+                    <option value="Pagamento de Aluguel">Pagamento de Aluguel</option>
+                    <option value="Pagamento de Internet">Pagamento de Internet</option>
+                    <option value="Pagamento de Telefone">Pagamento de Telefone</option>
+                    <option value="Pagamento de Funcionário">Pagamento de Funcionário</option>                                        
+                    <option value="Despesas Pessoais">Despesas Pessoais</option>
+                </select>
+            </div>         
+        </div> 
+        <div class="modal_footer">
+            <button type="submit" id="btn-despesa" class="btn-salvar-adiantamento">Lançar Despesa</button>
+        </div>  
+    </div>
+    </form>
+
+{if="$caixa!=0"}
+<!-- MODAL CAIXA ABERTO -->
+<div id="modal-fechar-caixa" class="modal">
+    
+  <div class="modal_content">
+      
+      <div class="modal_top">
+          <h2>Fechar Caixa</h2><span><a href="#" class="modal_close">&times;</a></span>
+      </div>           
+
+      <div class="caixa-content">
+                
+        <div class="caixa-item">
+            
+            <div class="caixa-item-texto">
+                Saldo Inicial
+            </div>
+            <div class="caixa-item-valor">
+                R$ {function="formataValor($caixa.0.saldo_inicial)"}
+            </div>            
+
+        </div>
+
+        <div class="caixa-item">
+            
+            <div class="caixa-item-texto">
+                Entradas
+            </div>
+            <div class="caixa-item-valor">
+                R$ {function="formataValor($caixa.0.entradas)"}
+            </div>            
+
+        </div>
+
+        <div class="caixa-item">
+            
+            <div class="caixa-item-texto">
+                Saídas
+            </div>
+            <div class="caixa-item-valor">
+                R$ {function="formataValor($caixa.0.saidas)"}
+            </div>            
+
+        </div>
+
+        <div class="caixa-item">            
+            <div class="caixa-item-texto">
+                <b>Saldo Atual</b>
+            </div>
+            <div class="caixa-item-valor">
+              <form action="http://192.168.0.118/adegamodelo/fechar_caixa" method="get">
+              <input type="hidden" name="saldo_final" id="saldo_final" value="{$caixa.0.saldo_final}">
+                <b>R$ {function="formataValor($caixa.0.saldo_final)"}</b>
+            </div>          
+
+        </div>        
+          <input type="hidden" name="data_abertura" value="{$caixa.0.data_abertura}">
+        <div class="caixa-item">
+            
+          <div class="caixa-item-texto">
+              <b>Conferência</b>
+          </div>
+          <div class="caixa-item-valor">
+              <input type="number" size="10" name="conferencia" id="conferencia" onkeyup=" soma_diferenca()">
+          </div>          
+
+      </div>
+
+      <div class="caixa-item">
+            
+        <div class="caixa-item-texto">
+            <b>Diferença</b>
+        </div>
+        <div class="caixa-item-valor" id="txt-diferenca">
+          
+        </div>          
+
+    </div>
+
+    <div class="caixa-item" style="height: 55px; margin-bottom: 0;">
+            
+      <div class="caixa-item-texto">
+          <b>Observações</b>
+      </div>
+      <div class="caixa-item-valor" style="width: 400px;">
+          <textarea name="observacao" id="" cols="30" rows="2" placeholder="Justifique se houver diferenças"></textarea>
+      </div>          
+
+  </div>
+
+        <div class="caixa-btn">
+            <button>Fechar Caixa</button>
+        </div>
+
+  </div> 
+  </form>
+
+</div>
+{/if}
+
+<!-- MODAL CAIXA ANTERIOR -->
+<div id="modal-caixa-anterior" class="modal">
+    
+    <div class="modal_content">
+        
+        <div class="modal_top">
+            <h2>Caixa</h2><span><a href="#" class="modal_close">&times;</a></span>
+        </div>           
+  
+        <div class="caixa-content">
+                  
+          <div class="caixa-item">
+              
+              <div class="caixa-item-texto">
+                  Saldo Inicial
+              </div>
+              <div class="caixa-item-valor">
+                  R$ 
+              </div>            
+  
+          </div>
+  
+          <div class="caixa-item">
+              
+              <div class="caixa-item-texto">
+                  Entradas
+              </div>
+              <div class="caixa-item-valor">
+                  R$ 
+              </div>            
+  
+          </div>
+  
+          <div class="caixa-item">
+              
+              <div class="caixa-item-texto">
+                  Saídas
+              </div>
+              <div class="caixa-item-valor">
+                  R$ 
+              </div>            
+  
+          </div>
+  
+          <div class="caixa-item">            
+              <div class="caixa-item-texto">
+                  <b>Saldo Atual</b>
+              </div>
+              <div class="caixa-item-valor">
+                <b>R$ </b>
+              </div>                     
+  
+        </div>
+  
+        <div class="caixa-item">
+              
+          <div class="caixa-item-texto">
+              <b>Diferença</b>
+          </div>
+          <div class="caixa-item-valor" id="txt-diferenca">
+            
+          </div>          
+  
+      </div>
+  
+      <div class="caixa-item" style="height: 55px; margin-bottom: 0;">
+              
+        <div class="caixa-item-texto">
+            <b>Observações</b>
+        </div>
+        <div class="caixa-item-valor" style="width: 400px;">
+            <textarea name="observacao" id="" cols="30" rows="2" placeholder="Justifique se houver diferenças"></textarea>
+        </div>          
+  
+    </div>
+  
+          
+  
+    </div> 
+    </form>
+  
+  </div>
+
+
+{if="$caixa_aberto!=0"}
+<!-- MODAL CAIXA ABERTO -->
+<div id="modal-caixa-aberto" class="modal">
+    
+  <div class="modal_content">
+      
+      <div class="modal_top">
+          <h2><img src="/adegamodelo/assets/images/aviso.png" style="width: 32px;"> Alerta!</h2><span><a href="#" class="modal_close">&times;</a></span>
+      </div>     
+      <p>O caixa do dia <b>{function="formataData($caixa_aberto.0.data_abertura)"}</b> ainda está aberto! É necessário fechá-lo para inicar as vendas.</p>        
+
+      <div class="caixa-content">
+                
+        <div class="caixa-item">
+            
+            <div class="caixa-item-texto">
+                Saldo Inicial
+            </div>
+            <div class="caixa-item-valor">
+                R$ {function="formataValor($caixa_aberto.0.saldo_inicial)"}
+            </div>            
+
+        </div>
+
+        <div class="caixa-item">
+            
+            <div class="caixa-item-texto">
+                Entradas
+            </div>
+            <div class="caixa-item-valor">
+                R$ {function="formataValor($caixa_aberto.0.entradas)"}
+            </div>            
+
+        </div>
+
+        <div class="caixa-item">
+            
+            <div class="caixa-item-texto">
+                Saídas
+            </div>
+            <div class="caixa-item-valor">
+                R$ {function="formataValor($caixa_aberto.0.saidas)"}
+            </div>            
+
+        </div>
+
+        <div class="caixa-item">            
+            <div class="caixa-item-texto">
+                <b>Saldo Atual</b>
+            </div>
+            <div class="caixa-item-valor">
+              <form action="http://192.168.0.118/adegamodelo/fechar_caixa" method="get">
+              <input type="hidden" name="saldo_final" id="saldo_final" value="{$caixa_aberto.0.saldo_final}">
+                <b>R$ {function="formataValor($caixa_aberto.0.saldo_final)"}</b>
+            </div>          
+
+        </div>        
+          <input type="hidden" name="data_abertura" value="{$caixa_aberto.0.data_abertura}">
+        <div class="caixa-item">
+            
+          <div class="caixa-item-texto">
+              <b>Conferência</b>
+          </div>
+          <div class="caixa-item-valor">
+              <input type="number" size="10" name="conferencia" id="conferencia" onkeyup=" soma_diferenca()">
+          </div>          
+
+      </div>
+
+      <div class="caixa-item">
+            
+        <div class="caixa-item-texto">
+            <b>Diferença</b>
+        </div>
+        <div class="caixa-item-valor" id="txt-diferenca">
+          
+        </div>          
+
+    </div>
+
+    <div class="caixa-item" style="height: 55px; margin-bottom: 0;">
+            
+      <div class="caixa-item-texto">
+          <b>Observações</b>
+      </div>
+      <div class="caixa-item-valor" style="width: 400px;">
+          <textarea name="observacao" id="" cols="30" rows="2" placeholder="Justifique se houver diferenças"></textarea>
+      </div>          
+
+  </div>
+
+        <div class="caixa-btn">
+            <button>Fechar Caixa</button>
+        </div>
+
+  </div> 
+  </form>
+
+</div>
+{/if}
+
+{if="$caixa_dia_anterior!=0"}
+<!-- MODAL PESQUISA CAIXA DIA ANTERIOR -->
+<div id="modal-caixa-dia-anterior" class="modal">
+    
+    <div class="modal_content">
+        
+        <div class="modal_top">
+            <h2>Caixa Fechado</h2><span><a href="#" class="modal_close">&times;</a></span>
+        </div>     
+        <p><b>{function="formataData($caixa_anterior.0.data_abertura)"}</b>.</p>        
+                    
+        <div class="caixa-item">
+            
+            <div class="caixa-item-texto">
+                Saldo Inicial
+            </div>
+            <div class="caixa-item-valor">
+                R$ {function="formataValor($caixa_anterior.0.saldo_inicial)"}
+            </div>            
+
+        </div>
+
+        <div class="caixa-item">
+            
+            <div class="caixa-item-texto">
+                Entradas
+            </div>
+            <div class="caixa-item-valor">
+                R$ {function="formataValor($caixa_anterior.0.entradas)"}
+            </div>            
+
+        </div>
+
+        <div class="caixa-item">
+            
+            <div class="caixa-item-texto">
+                Saídas
+            </div>
+            <div class="caixa-item-valor">
+                R$ {function="formataValor($caixa_anterior.0.saidas)"}
+            </div>            
+
+        </div>
+
+        <div class="caixa-item">            
+            <div class="caixa-item-texto">
+                <b>Saldo Final</b>
+            </div>
+            <div class="caixa-item-valor">
+                <form action="http://192.168.0.118/adegamodelo/fechar_caixa" method="get">
+                <input type="hidden" name="saldo_final" id="saldo_final" value="{$caixa_aberto.0.saldo_final}">
+                <b>R$ {function="formataValor($caixa_anterior.0.saldo_final)"}</b>
+            </div>          
+
+        </div>        
+            
+        <div class="caixa-item">
+            
+            <div class="caixa-item-texto">
+                <b>Diferença</b>
+            </div>
+            <div class="caixa-item-valor">
+            <b>R$ {function="formataValor($caixa_anterior.0.diferenca)"}</b>
+            </div>          
+
+        </div>      
+
+        <div class="caixa-item" style="height: 55px; margin-bottom: 0;">
+                
+        <div class="caixa-item-texto">
+            <b>Observações</b>
+        </div>
+        <div class="caixa-item-valor" style="width: 400px;">
+            {$caixa_anterior.0.obs}
+        </div>          
+
+        </div>
+
+    </div>
+</div>
+{/if}
+
+<script>
+
+    function soma_diferenca() {
+      
+      saldo_final = document.getElementById("saldo_final").value
+      conferencia = document.getElementById("conferencia").value  
+      vlr_diferenca = conferencia - saldo_final
+    
+      if(vlr_diferenca < 0) { 
+    
+        var btn = document.querySelector("#txt-diferenca");
+        btn.innerHTML = "<span class='txt_vermelho'>R$ "+vlr_diferenca.toFixed(2)+"</span>";
+    
+      }
+    
+      if(vlr_diferenca > 0) { 
+    
+        var btn = document.querySelector("#txt-diferenca");
+        btn.innerHTML = "<span class='txt_azul'>R$ "+vlr_diferenca.toFixed(2)+"</span>";
+    
+      }
+    
+      if(vlr_diferenca == 0) { 
+    
+        var btn = document.querySelector("#txt-diferenca");
+        btn.innerHTML = "<span class='txt_verde'>Sem diferença!</span>";
+    
+      }
+      
+      document.getElementById("vlr_diferenca").value = vlr_diferenca.toFixed(2);
+    
+    }   
+    
+    </script>
+
+    <script>
+        function soma_despesa() {
+
+            saldo_final = document.getElementById("saldo_final").value
+            vlr_despesa = document.getElementById("vlr_despesa").value  
+            vlr_diferenca = saldo_final - vlr_despesa
+
+            if(vlr_diferenca < 0) {
+                let el = document. getElementById('btn-despesa');
+                el. classList. remove('btn-salvar-adiantamento');
+                el. classList. add('invisivel');
+            } else {
+                let el = document. getElementById('btn-despesa');
+                el. classList. remove('invisivel');
+                el. classList. add('btn-salvar-adiantamento');
+            }             
+
+        }
+    </script>
